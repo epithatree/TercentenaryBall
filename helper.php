@@ -47,16 +47,36 @@ class modHelloWorldHelper
          
       }
     }
-//    public static function modifyDetails($bodNum, $telNum)
-//    {
-//         $db = JFactory::getDbo();
-//         try
-//         {
-//           $db -> transactionStart();
-//
-//           $query = $db -> getQuery(true);
-//
-//           $values = array($
+    public static function modifyDetails($id, $bodNum, $telNum)
+    {
+         $db = JFactory::getDbo();
+         try
+         {
+           $db -> transactionStart();
 
+           $query = $db -> getQuery(true);
+
+           $fields = array(
+             $db->quoteName('Bod_card') .  "='{$bodNum}'",
+             $db->quoteName('Telephone') . "='{$telNum}'"
+           );
+
+           $conditions = array(
+             $db->quoteName('Unique_ID') . "=$id"
+           );
+
+           $query->update($db->quoteName('#__ticketverification'))->set($fields)->where($conditions);
+
+           $db->setQuery($query);
+           $result = $db->execute();
+
+           $db->transactionCommit();
+        }
+        catch (Exception $e)
+        {
+          $db->transactionRollback();
+          JErrorPage::render($e);
+        }
+    }
 }
 ?>

@@ -2,7 +2,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 <form action="<?php echo JURI::current() ?>" method="POST">
 	Enter your booking ID: <input type="text" name = "bookingID" value="<?php echo $_POST["bookingID"]?>"><br>
-	Enter your email address: <input type="text" name = "email" value="<?php echo $_POST["email"]);?>"><br>
+	Enter your email address: <input type="text" name = "email" value="<?php echo $_POST["email"]?>"><br>
 	<input type="submit" value="Submit">
 </form>
 <?php $data=modHelloWorldHelper::getData($_POST["bookingID"], $_POST["email"]);?>
@@ -50,6 +50,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 <input type="submit" value="Submit">
 </form>
 <?php if (isset($id)) : ?>
-<?php for($temp_id =$_POST['bookingID'], $temp_id <= $id, $temp_id++) : ?>
+<?php for($temp_id =$_POST['bookingID']; $temp_id < $id; ++$temp_id) : ?>
+<?php modHelloWorldHelper::modifyDetails($temp_id, $_POST["$temp_id" . "bod"], $_POST["$temp_id" . "telephone"]);?>
 <?php endfor;?>
+<?php $id = $_POST['bookingID'];?>
 <?php endif;?>
+
