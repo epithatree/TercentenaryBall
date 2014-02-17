@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.1.0" client="site" method="upgrade">
-    <name>Hello, World!</name>
-    <author>John Doe</author>
+    <name>The Tercentenary Ball</name>
+    <author>Robert Collins</author>
     <version>1.0.0</version>
-    <description>A simple Hello, World! module.</description>
+    <description>A modules for allowing guest to verify tickets </description>
     <files>
         <filename>mod_helloworld.xml</filename>
         <filename module="mod_helloworld">mod_helloworld.php</filename>

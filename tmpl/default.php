@@ -1,6 +1,6 @@
 <?php // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
-<form action="<?php echo JURI::current() ?>" method="POST">
+<form name="myform" action="<?php echo JURI::current() ?>" method="POST">
 	Enter your booking ID: <br><input type="text" name = "bookingID" value="<?php echo $_POST["bookingID"]?>"><br>
 	Enter your email address: <br><input type="text" name = "email" value="<?php echo $_POST["email"]?>"><br>
 
@@ -22,8 +22,8 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 	  $telephone=$data['Telephone'];
 	  $email=$data['Email'];
 	  $amountPaid= $data['Amount_Paid'] ? $data['Amount_Paid']: $amountPaid;
-	  $paymentMethod=$data['Payment_Method'] ? $data['Payment_Method'] : $paymentMethod;
-	  $totalAmountDue=$data['Total_Amount_Due'] ? $data['Total_Amount_Due'] : $totalAmountDue;
+	  $paymentMethod=isset($data['Payment_Method']) ? $data['Payment_Method'] : $paymentMethod;
+	  $totalAmountDue=isset($data['Total_Amount_Due']) ? $data['Total_Amount_Due'] : $totalAmountDue;
 	?>
 		<tr>
 			<td><b><?php echo $leader?></b></td>
@@ -50,13 +50,25 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 			<td> <input value="<?php echo $telephone?>" type="text" name="<?php echo $id?>[telephone]"?></td>
 		</tr>
 <input type="hidden" name="payment_method" value="<?php echo $paymentMethod?>" />
-<input type="hidden" name="amount_to_pay" value="<?php echo totalAmountDue?>" />
+<input type="hidden" name="amount_to_pay" value="<?php echo $totalAmountDue?>" />
 <?php $leader = "Guest Details" ?>
 <?php $data=modHelloWorldHelper::getData(++$id);?>
 <?php endwhile; ?>
 	</table>
 <input type="hidden" name="custom_id" value="<?php echo $id?>" />
 <input type="hidden" name="custom_name" value="<?php echo $name?>"/>
-<input type="submit" value="Submit">
+<input type="button" value="Submit">
+<?php if (isset($paymentMethod)): ?>
+	<input type="button" value="Continue to Payment">
+<?php endif; ?>
 </form>
-
+<script type="text/javascript">
+jQuery(function($) {
+    var form = document.myform;
+    $(form).find("input[type='button']").click(function() {
+        form.action = this.value == 'Submit' ? "<?php echo JURI::current()?>" : "<?php echo JURI::current()."2"?>";
+        form.submit();
+        return false;
+    });
+});
+</script>
