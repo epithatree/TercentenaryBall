@@ -29,17 +29,17 @@ class modHelloWorldHelper
 
           $query = $db->getQuery(true);
 
-          $query -> select($db->quoteName(array('Name', 'Unique_ID', 'Bod_Card', 'Telephone', 'Email', 'Amount_Paid', 'Payment_Method', 'Total_Amount_Due')))
+          $query -> select($db->quoteName(array('Unique_ID', 'College', 'Status', 'Dining', 'Name', 'Email', 'Bod_Card', 'Telephone', 'Group_ID', 'Over_18', 'Confirmed')))
                  -> from($db->quoteName('#__ticketverification'))
                  -> where($db->quoteName('Unique_ID')." = ".$db->quote($id));
-          if (isset($email)) $query -> where($db->quoteName('Email')." = ".$db->quote($email));
+          $query -> where($db->quoteName('Email')." = ".$db->quote($email));
           
           $db->setQuery($query);
           $results = $db->loadAssoc();
 
           $db->transactionCommit();
           return $results;
-       }
+          }
        catch (Exception $e)
        {
          $db->transactionRollback();
@@ -47,7 +47,32 @@ class modHelloWorldHelper
          
       }
     }
-    public static function modifyDetails($id, $bodNum, $telNum)
+    public static function getGroupData($groupID)
+    {
+       $db = JFactory::getDbo();
+
+       try
+       {
+         $db -> transactionStart();
+
+         $query = $db->getQuery(true);
+
+          $query -> select($db->quoteName(array('Unique_ID', 'College', 'Status', 'Dining', 'Name', 'Email', 'Bod_Card', 'Telephone', 'Group_ID', 'Over_18', 'Confirmed')))
+                 -> from($db->quoteName('#__ticketverification'))
+                 -> where($db->quoteName('Group_ID')." = ".$db->quote($groupID));
+           $db->setQuery($query);
+           $results = $db->loadAssocList();
+
+           $db->transactionCommit();
+           return $results;
+           }
+       catch (Exception $e)
+       {
+         $db->transactionRollback();
+         JErrorPage::render($e);
+       }
+     }
+    public static function modifyDetails($id, $name, $email, $bodNum, $telNum, $over18)
     {
          $db = JFactory::getDbo();
          try
@@ -57,8 +82,12 @@ class modHelloWorldHelper
            $query = $db -> getQuery(true);
 
            $fields = array(
+             $db->quoteName('Name') .  "='{$name}'",
+             $db->quoteName('Email') .  "='{$email}'",
              $db->quoteName('Bod_card') .  "='{$bodNum}'",
-             $db->quoteName('Telephone') . "='{$telNum}'"
+             $db->quoteName('Telephone') . "='{$telNum}'",
+             $db->quoteName('Over_18') . "='{$over18}'",
+             $db->quoteName('Confirmed') . "='True'"
            );
 
            $conditions = array(
